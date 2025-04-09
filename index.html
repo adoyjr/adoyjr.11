@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kakulator</title>
+    <style>
+        body {
+            font-family: arial, sans-serif;
+            background: url(iyah.jpg);
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; 
+}
+        .container {
+            max-width: 400px;
+            padding: 60px;
+            background: #000;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin: auto;
+}   
+        h1, h2 {color: #c01e1e; }
+        input, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input:focus {
+            border-color: #1190cd;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(45deg, #1c6dd0, #54a3e8);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover { 
+            transform: scale(1.05); 
+        }
+        .result { 
+            font-size: 24px;
+            color: #51b5c7;
+        }
+        .invalid {
+            display: none;
+            color: red;
+            font-size: 14px;
+        } 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DiskonQu</h1>
+        <input id="harga" placeholder="harga awal">
+        <input id="diskon" type="number" placeholder="Diskon (%)" min="0">
+        <button onclick="hitung()">hitung</button>
+        <button onclick="location.reload()">refresh</button>
+        <p id="hargainvalid" class="invalid">harga tidak valid</p>
+        <p id="diskoninvalid" class="invalid">diskon tidak valid</p>
+        <h2>jumlah diskon: <span id="diskontotal" class="result">0</span></h2>
+        <h2>harga akhir: <span id="hargaakhir" class="result">0</span></h2>
+    </div>
+    <script>
+       const format = value => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+document.getElementById('harga').addEventListener('input', e => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 1 && value.startsWith('0')) value = value.substring(1);
+    e.target.value = format(value);
+});
+
+const hitung = () => {
+    const harga = parseFloat(document.getElementById('harga').value.replace(/\./g, '')) || 0;
+    const diskon = parseFloat(document.getElementById('diskon').value) || 0;
+
+    const hargaInvalid = harga <= 0;
+    const diskonInvalid = diskon > 100;
+
+    document.getElementById('hargainvalid').style.display = hargaInvalid ? 'block' : 'none';
+    document.getElementById('diskoninvalid').style.display = diskonInvalid ? 'block' : 'none';
+
+    if (hargaInvalid || diskonInvalid) return;
+
+    const diskonTotal = harga * (diskon / 100);
+    const hargaAkhir = harga - diskonTotal;
+
+    document.getElementById('diskontotal').innerHTML = format(diskonTotal);
+    document.getElementById('hargaakhir').innerHTML = format(hargaAkhir);
+};
+    </script>
+</body>
+</html>
